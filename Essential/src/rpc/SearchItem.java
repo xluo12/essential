@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,6 +40,7 @@ public class SearchItem extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String userId = request.getParameter("user_id");
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 		
@@ -47,19 +49,20 @@ public class SearchItem extends HttpServlet {
 		
 		DBConnection connection = DBConnectionFactory.getConnection();
 		List<Item> items = connection.searchItems(lat, lon, keyword);
+		Set<String> favorite = connection.getFavoriteItemIds(userId);
+
         connection.close(); 
 
-        List<JSONObject> list = new ArrayList<>();
+        JSONArray array = new JSONArray();
 		try {
 			for (Item item : items) {
-				// Add a thin version of item object
 				JSONObject obj = item.toJSONObject();
-				list.add(obj);
+				obj.put("favorite", favorite.contains(item.getItemId()));
+				array.put(obj);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONArray array = new JSONArray(list);
 		RpcHelper.writeJsonArray(response, array);
 	}
 
