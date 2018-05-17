@@ -39,7 +39,7 @@ public class ItemHistory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-String userId = request.getParameter("user_id");
+		String userId = request.getParameter("user_id");
 		
 		DBConnection conn = DBConnectionFactory.getConnection();
 		Set<Item> items = conn.getFavoriteItems(userId);

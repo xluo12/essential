@@ -79,7 +79,6 @@ public interface DBConnection {
 	 */
 	public String getFullname(String userId);
 	
-
 	/**
 	 * Return whether the credential is correct. (This is not needed for main
 	 * course, just for demo and extension)
