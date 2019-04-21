@@ -1,94 +1,78 @@
-(function() {
-
-    /**
-     * Variables
-     */
-    var user_id = '1111';
-    var user_fullname = 'John';
-    var lng = -122.08;
-    var lat = 37.38;
+(function () {
 
     /**
      * Initialize
      */
     function init() {
         // Register event listeners
-    		$('login-btn').addEventListener('click', login);
+        $('register-btn').addEventListener('click', register);
+        $('login-btn').addEventListener('click', login);
         $('nearby-btn').addEventListener('click', loadNearbyItems);
         $('fav-btn').addEventListener('click', loadFavoriteItems);
         $('recommend-btn').addEventListener('click', loadRecommendedItems);
 
         validateSession();
-
-		// onSessionValid({
-		// user_id : '1111',
-		// name : 'John Smith'
-		// });
     }
-    
+
     /**
 	 * Session
 	 */
-	function validateSession() {
-		// The request parameters
-		var url = './login';
-		var req = JSON.stringify({});
+    function validateSession() {
+        // The request parameters
+        var url = './login';
+        var req = JSON.stringify({});
 
-		// display loading message
-		showLoadingMessage('Validating session...');
+        // display loading message
+        showLoadingMessage('Validating session...');
 
-		// make AJAX call
-		ajax('GET', url, req,
-		// session is still valid
-		function(res) {
-			var result = JSON.parse(res);
+        // make AJAX call
+        ajax('GET', url, req,
+            // session is still valid
+            function (res) {
+                var result = JSON.parse(res);
+                if (result.status === 'OK') {
+                    onSessionValid(result);
+                }
+            });
+    }
 
-			if (result.status === 'OK') {
-				onSessionValid(result);
-			}
-		});
-	}
+    function onSessionValid(result) {
+        user_id = result.user_id;
+        var loginForm = $('login-form');
+        var itemNav = $('item-nav');
+        var itemList = $('item-list');
+        var avatar = $('avatar');
+        var welcomeMsg = $('welcome-msg');
+        var logoutBtn = $('logout-link');
 
-	function onSessionValid(result) {
-		user_id = result.user_id;
-		user_fullname = result.name;
+        welcomeMsg.innerHTML = 'Welcome, ' + user_id;
 
-		var loginForm = $('login-form');
-		var itemNav = $('item-nav');
-		var itemList = $('item-list');
-		var avatar = $('avatar');
-		var welcomeMsg = $('welcome-msg');
-		var logoutBtn = $('logout-link');
+        showElement(itemNav);
+        showElement(itemList);
+        showElement(avatar);
+        showElement(welcomeMsg);
+        showElement(logoutBtn, 'inline-block');
+        hideElement(loginForm);
 
-		welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
+        initGeoLocation();
+    }
 
-		showElement(itemNav);
-		showElement(itemList);
-		showElement(avatar);
-		showElement(welcomeMsg);
-		showElement(logoutBtn, 'inline-block');
-		hideElement(loginForm);
+    function onSessionInvalid() {
+        var loginForm = $('login-form');
+        var itemNav = $('item-nav');
+        var itemList = $('item-list');
+        var avatar = $('avatar');
+        var welcomeMsg = $('welcome-msg');
+        var logoutBtn = $('logout-link');
 
-		initGeoLocation();
-	}
+        hideElement(itemNav);
+        hideElement(itemList);
+        hideElement(avatar);
+        hideElement(logoutBtn);
+        hideElement(welcomeMsg);
 
-	function onSessionInvalid() {
-		var loginForm = $('login-form');
-		var itemNav = $('item-nav');
-		var itemList = $('item-list');
-		var avatar = $('avatar');
-		var welcomeMsg = $('welcome-msg');
-		var logoutBtn = $('logout-link');
-
-		hideElement(itemNav);
-		hideElement(itemList);
-		hideElement(avatar);
-		hideElement(logoutBtn);
-		hideElement(welcomeMsg);
-
-		showElement(loginForm);
-	}
-
+        showElement(loginForm);
+    }
 
     function initGeoLocation() {
         if (navigator.geolocation) {
@@ -118,7 +102,7 @@
         // Get location from http://ipinfo.io/json
         var url = 'http://ipinfo.io/json'
         var req = null;
-        ajax('GET', url, req, function(res) {
+        ajax('GET', url, req, function (res) {
             var result = JSON.parse(res);
             if ('loc' in result) {
                 var loc = result.loc.split(',');
@@ -130,47 +114,92 @@
             loadNearbyItems();
         });
     }
+
+    // -----------------------------------
+    // Login
+    // -----------------------------------
+
+    function login() {
+        var username = $('username').value;
+        var password = $('password').value;
+        password = md5(username + md5(password));
+
+        // The request parameters
+        var url = './login';
+        var req = JSON.stringify({
+            user_id: username,
+            password: password,
+        });
+
+        ajax('POST', url, req,
+            // successful callback
+            function (res) {
+                var result = JSON.parse(res);
+
+                // successfully logged in
+                if (result.status === 'OK') {
+                    onSessionValid(result);
+                }
+            },
+
+            // error
+            function () {
+                showLoginError();
+            });
+    }
+
+    // -----------------------------------
+    // Register
+    // -----------------------------------
+
+    function register() {
+        var username = ($('username').value).toString();
+        var password = ($('password').value).toString();
+        if (username === '' || password === '') {
+        		emptyErrorMessage();
+        		return
+        }
+        
+        password = md5(username + md5(password));
+
+        // The request parameters
+        var url = './register';
+        var req = JSON.stringify({
+            user_id: username,
+            password: password,
+        });
+
+        ajax('POST', url, req,
+            // successful callback
+            function (res) {
+                var result = JSON.parse(res);
+                // successfully logged in
+                if (result.status === 'OK') {
+                    onSessionValid(result);
+                }
+            },
+
+            // error
+            function () {
+                showRegisterError();
+            });
+    }
+
+    function showLoginError() {
+        $('error-message').innerHTML = 'Invalid username or password';
+    }
+
+    function showRegisterError() {
+        $('error-message').innerHTML = 'Please pick another name';
+    }
+
+    function clearErrorMessage() {
+        $('error-message').innerHTML = '';
+    }
     
- // -----------------------------------
-	// Login
-	// -----------------------------------
-
-	function login() {
-		var username = $('username').value;
-		var password = $('password').value;
-		password = md5(username + md5(password));
-
-		// The request parameters
-		var url = './login';
-		var req = JSON.stringify({
-			user_id : username,
-			password : password,
-		});
-
-		ajax('POST', url, req,
-		// successful callback
-		function(res) {
-			var result = JSON.parse(res);
-
-			// successfully logged in
-			if (result.status === 'OK') {
-				onSessionValid(result);
-			}
-		},
-
-		// error
-		function() {
-			showLoginError();
-		});
-	}
-
-	function showLoginError() {
-		$('login-error').innerHTML = 'Invalid username or password';
-	}
-
-	function clearLoginError() {
-		$('login-error').innerHTML = '';
-	}
+    function emptyErrorMessage() {
+        $('error-message').innerHTML = 'Username or password cannot be empty';
+    }
 
 
     // -----------------------------------
@@ -263,17 +292,17 @@
 
         xhr.open(method, url, true);
 
-        xhr.onload = function() {
-        	if (xhr.status === 200) {
-				callback(xhr.responseText);
-			} else if (xhr.status === 403) {
-				onSessionInvalid();
-			} else {
-				errorHandler();
-			}
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                callback(xhr.responseText);
+            } else if (xhr.status === 403) {
+                onSessionInvalid();
+            } else {
+                errorHandler();
+            }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error("The request couldn't be completed.");
             errorHandler();
         };
@@ -310,7 +339,7 @@
         // make AJAX call
         ajax('GET', url + '?' + params, req,
             // successful callback
-            function(res) {
+            function (res) {
                 var items = JSON.parse(res);
                 if (!items || items.length === 0) {
                     showWarningMessage('No nearby item.');
@@ -319,7 +348,7 @@
                 }
             },
             // failed callback
-            function() {
+            function () {
                 showErrorMessage('Cannot load nearby items.');
             });
     }
@@ -340,14 +369,14 @@
         showLoadingMessage('Loading favorite items...');
 
         // make AJAX call
-        ajax('GET', url + '?' + params, req, function(res) {
+        ajax('GET', url + '?' + params, req, function (res) {
             var items = JSON.parse(res);
             if (!items || items.length === 0) {
                 showWarningMessage('No favorite item.');
             } else {
                 listItems(items);
             }
-        }, function() {
+        }, function () {
             showErrorMessage('Cannot load favorite items.');
         });
     }
@@ -374,7 +403,7 @@
             url + '?' + params,
             req,
             // successful callback
-            function(res) {
+            function (res) {
                 var items = JSON.parse(res);
                 if (!items || items.length === 0) {
                     showWarningMessage('No recommended item. Make sure you have favorites.');
@@ -383,7 +412,7 @@
                 }
             },
             // failed callback
-            function() {
+            function () {
                 showErrorMessage('Cannot load recommended items.');
             });
     }
@@ -413,7 +442,7 @@
 
         ajax(method, url, req,
             // successful callback
-            function(res) {
+            function (res) {
                 var result = JSON.parse(res);
                 if (result.result === 'SUCCESS') {
                     li.dataset.favorite = favorite;
@@ -495,7 +524,6 @@
         category.innerHTML = 'Category: ' + item.categories.join(', ');
         section.appendChild(category);
 
-        // TODO(vincent). here we might have a problem showing 3.5 as 3.
         // stars
         var stars = $('div', {
             className: 'stars'
@@ -532,7 +560,7 @@
             className: 'fav-link'
         });
 
-        favLink.onclick = function() {
+        favLink.onclick = function () {
             changeFavoriteItem(item_id);
         };
 

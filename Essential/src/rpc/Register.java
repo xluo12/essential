@@ -46,20 +46,15 @@ public class Register extends HttpServlet {
 			JSONObject input = RpcHelper.readJsonObject(request);
 			String userId = input.getString("user_id");
 			String pwd = input.getString("password");
-			String firstName = input.getString("first_name");
-			String lastName = input.getString("last_name");
 			
 			JSONObject obj = new JSONObject();
-			if (conn.doRegister(userId, pwd, firstName, lastName)) {
+			if (conn.doRegister(userId, pwd)) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user_id", userId);
 				// setting session to expire in 10 minutes
 				session.setMaxInactiveInterval(10 * 60);
-				// Get user name
-				String name = conn.getFullname(userId);
 				obj.put("status", "OK");
 				obj.put("user_id", userId);
-				obj.put("name", name);
 			} else {
 				response.setStatus(401);
 			}

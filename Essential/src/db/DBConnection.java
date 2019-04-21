@@ -77,7 +77,7 @@ public interface DBConnection {
 	 * @param userId
 	 * @return full name of the user
 	 */
-	public String getFullname(String userId);
+//	public String getFullname(String userId);
 	
 	/**
 	 * Return whether the credential is correct. (This is not needed for main
@@ -89,7 +89,7 @@ public interface DBConnection {
 	 */
 	public boolean verifyLogin(String userId, String password);
 	
-	public boolean doRegister(String userId, String password, String firstName, String lastName);
+	public boolean doRegister(String userId, String password);
 }
 
 

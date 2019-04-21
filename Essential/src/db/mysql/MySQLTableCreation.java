@@ -46,7 +46,7 @@ public class MySQLTableCreation {
 				stmt.executeUpdate(sql);
 				
 				sql = "CREATE TABLE users (user_id VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, " +
-					      "first_name VARCHAR(255), last_name VARCHAR(255), PRIMARY KEY (user_id))";
+					      "PRIMARY KEY (user_id))";
 				stmt.executeUpdate(sql);
 				
 				sql = "CREATE TABLE history (user_id VARCHAR(255) NOT NULL, item_id VARCHAR(255) NOT NULL, " +
@@ -60,9 +60,9 @@ public class MySQLTableCreation {
 				
 				// Insert fake user for testing
 				// Create a fake user
-				sql = "INSERT INTO users " + "VALUES (\"1111\", \"3229c1097c00d497a0fd282d586be050\", \"John\", \"Smith\")";
-				System.out.println("Executing query:\n" + sql);
-				stmt.executeUpdate(sql);
+//				sql = "INSERT INTO users " + "VALUES (\"1111\", \"3229c1097c00d497a0fd282d586be050\", \"John\", \"Smith\")";
+//				System.out.println("Executing query:\n" + sql);
+//				stmt.executeUpdate(sql);
 				
 				// debug info
 				System.out.println("Import is done successfully.");

@@ -190,25 +190,25 @@ public class MySQLConnection implements DBConnection {
 		}
 	}
 
-	@Override
-	public String getFullname(String userId) {
-		if (conn == null) {
-			return null;
-		}
-		String name = "";
-		try {
-			String sql = "SELECT first_name, last_name from users WHERE user_id = ?";
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, userId);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				name = String.join(" ", rs.getString("first_name"), rs.getString("last_name"));
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return name;
-	}
+//	@Override
+//	public String getFullname(String userId) {
+//		if (conn == null) {
+//			return null;
+//		}
+//		String name = "";
+//		try {
+//			String sql = "SELECT first_name, last_name from users WHERE user_id = ?";
+//			PreparedStatement statement = conn.prepareStatement(sql);
+//			statement.setString(1, userId);
+//			ResultSet rs = statement.executeQuery();
+//			if (rs.next()) {
+//				name = String.join(" ", rs.getString("first_name"), rs.getString("last_name"));
+//			}
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//		return name;
+//	}
 
 	@Override
 	public boolean verifyLogin(String userId, String password) {
@@ -231,17 +231,15 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public boolean doRegister(String userId, String password, String firstName, String lastName) {
+	public boolean doRegister(String userId, String password) {
 		if (conn == null) {
 			return false;
 		}
 		try {
-			String sql = "INSERT INTO users " + "VALUES (?, ?, ?, ?)";	
+			String sql = "INSERT INTO users " + "VALUES (?, ?)";	
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
 			statement.setString(2, password);
-			statement.setString(3, firstName);
-			statement.setString(4, lastName);
 			int rowsUpdated = statement.executeUpdate();
 			return rowsUpdated == 1;
 		} catch (Exception e) {

@@ -36,6 +36,7 @@ ul {
 	border-radius: 50%;
 	color: #333C4D;
 	height: 40px;
+	margin-left: 10px;
 	margin-right: 20px;
 	padding-left: 9px;
 	padding-top: 5px;
@@ -57,7 +58,6 @@ ul {
 }
 
 #welcome-msg {
-	border-right: 1px solid #FFFFFF;
 	padding-right: 10px;
 }
 
@@ -76,7 +76,6 @@ ul {
 .container>header {
 	align-items: center; 
 	background:
-		/*url('http://folkartcarsi.com/img/4.jpg')*/
 		url('../img/beach-wide.jpg')
 		no-repeat 50% 50%;
 	background-size: 100%;
@@ -120,11 +119,19 @@ ul {
   width: 100%;
 }
 
-#login-form button {
+#login-btn {
+  width: 80px;
   cursor: pointer;
   float: right;
   padding: 8px 20px;
-  text-align: right;
+  text-align: center;
+}
+
+#register-btn {
+  width: 80px;
+  cursor: pointer;
+  padding: 8px 20px;
+  text-align: center;
 }
 
 #login-error {

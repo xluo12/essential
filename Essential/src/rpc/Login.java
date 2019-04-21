@@ -45,10 +45,8 @@ public class Login extends HttpServlet {
 				obj.put("status", "Session Invalid");
 			} else {
 				String userId = (String) session.getAttribute("user_id");
-				String name = conn.getFullname(userId);
 				obj.put("status", "OK");
 				obj.put("user_id", userId);
-				obj.put("name", name);
 			}
 			RpcHelper.writeJsonObject(response, obj);
 		} catch (JSONException e) {
@@ -75,11 +73,8 @@ public class Login extends HttpServlet {
 				session.setAttribute("user_id", userId);
 				// setting session to expire in 10 minutes
 				session.setMaxInactiveInterval(10 * 60);
-				// Get user name
-				String name = conn.getFullname(userId);
 				obj.put("status", "OK");
 				obj.put("user_id", userId);
-				obj.put("name", name);
 			} else {
 				response.setStatus(401);
 			}
