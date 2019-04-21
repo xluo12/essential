@@ -229,4 +229,24 @@ public class MySQLConnection implements DBConnection {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean doRegister(String userId, String password, String firstName, String lastName) {
+		if (conn == null) {
+			return false;
+		}
+		try {
+			String sql = "INSERT INTO users " + "VALUES (?, ?, ?, ?)";	
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			statement.setString(2, password);
+			statement.setString(3, firstName);
+			statement.setString(4, lastName);
+			int rowsUpdated = statement.executeUpdate();
+			return rowsUpdated == 1;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
 }
