@@ -1,5 +1,5 @@
 # essential
-This is an activity recommendation full stack web project.
+This is an activity recommendation full stack web project. Frontend is implemented using vanila JavaScript and Ajax, backend with Java and Apache Tomcat, and MySQL database and TicketMaster API.
 
 1. Start MySQL database at port 3306 with username and password of "root".
 2. Register with a user name and password.
