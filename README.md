@@ -1,4 +1,4 @@
-### Event search and recommendation site
+# Event search and recommendation site
 
 - The website allows users to search for nearby events and receive recommendations based on their favorite events. 
 - Implemented using Java and Apache Tomcat with RESTful APIs; used MySQL and MongoDB for data storage. 
