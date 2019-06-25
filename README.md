@@ -1,9 +1,17 @@
-# essential
-This is an activity recommendation full stack web project. Frontend is implemented using vanila JavaScript and Ajax, backend with Java and Apache Tomcat, and MySQL database and TicketMaster API.
+# Event search and recommendation site
 
-1. Start MySQL database at port 3306 with username and password of "root".
-2. Register with a user name and password.
-3. 'Nearby' --------- displays nearby available activities. Clicks on the name to see details. Toggle the 'heart' to set favorite.
-4. 'My Favorites'---- displays your favorite activities.
-5. 'Recommendation'-- displays activities recommended to you based on your favorite activities.
-  
+- The website allows users to search for nearby events and receive recommendations based on their favorite events. 
+- Implemented using Java and Apache Tomcat with RESTful APIs; used MySQL and MongoDB for data storage. 
+- Deployed server to AWS EC2 to handle 150 queries per second tested by Apache JMeter.
+
+### 'Nearby' displays nearby available activities. Clicks on the name to see details. Toggle the 'heart' to set favorite.
+
+![Search Demo](demo/search.gif)
+
+### 'My Favorites' displays your favorite activities.
+
+![Favorite Demo](demo/favorite.gif)
+
+### 'Recommendation' displays activities recommended to you based on your favorite activities.
+
+![Recommendation Demo](demo/recommendation.gif)
